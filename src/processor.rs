@@ -6,6 +6,7 @@ use solana_program::{
     pubkey::Pubkey,
     program_pack::{Pack, IsInitialized},
     sysvar::{rent::Rent, Sysvar},
+    program::invoke,
 };
 
 use crate::{
@@ -17,13 +18,13 @@ use crate::{
 pub struct Processor;
 impl Processor {
     pub fn process(
-        program_id: &PubKey,
+        program_id: &Pubkey,
         accounts: &[AccountInfo],
         instruction_data: &[u8],
     ) -> ProgramResult {
         let instruction = EscrowInstruction::unpack(instruction_data)?;
 
-        match (instruction) {
+        match instruction {
             EscrowInstruction::InitEscrow { amount } => {
                 msg!("Instruction: InitEscrow");
                 Self::process_init_escrow(accounts, amount, program_id)
@@ -34,7 +35,7 @@ impl Processor {
     fn process_init_escrow(
         accounts: &[AccountInfo],
         amount: u64,
-        &Pubkey
+        program_id: &Pubkey
     ) -> ProgramResult {
         let account_info_iter = &mut accounts.iter();
         let initializer = next_account_info(account_info_iter)?;
@@ -68,9 +69,29 @@ impl Processor {
         escrow_info.initializer_token_to_receive_account_pubkey = *token_to_receive_account.key;
         escrow_info.expected_amount = amount;
 
-        Escrow::Pack(escrow_info, &mut escrow_account.data.borrow_mut())?;
+        Escrow::pack(escrow_info, &mut escrow_account.data.borrow_mut())?;
 
         let (pda, _bump_seed) = Pubkey::find_program_address(&[b"escrow"], program_id);
+
+        let token_program = next_account_info(account_info_iter)?;
+        let owner_change_ix = spl_token::instruction::set_authority(
+            token_program.key,
+            temp_token_account.key,
+            Some(&pda),
+            spl_token::instruction::AuthorityType::AccountOwner,
+            initializer.key,
+            &[&initializer.key],
+        )?;
+
+        msg!("Calling the token program to transfer token account ownership...");
+        invoke(
+            &owner_change_ix,
+            &[
+                temp_token_account.clone(),
+                initializer.clone(),
+                token_program.clone(),
+            ],
+        )?;
 
         Ok(())
     }

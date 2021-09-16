@@ -1,7 +1,7 @@
 use solana_program::{
     program_pack::{IsInitialized, Pack, Sealed},
     program_error::ProgramError,
-    pubkey::Pubkey;
+    pubkey::Pubkey,
 };
 
 use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
@@ -37,7 +37,7 @@ impl Pack for Escrow {
         let is_initialized = match is_initialized {
             [0] => false,
             [1] => true,
-            _ => return Err(ProgramError::InvalidAccountData);
+            _ => return Err(ProgramError::InvalidAccountData),
         };
 
         Ok(Escrow{
@@ -70,7 +70,7 @@ impl Pack for Escrow {
         is_initialized_dst[0] = *is_initialized as u8;
         initializer_pubkey_dst.copy_from_slice(initializer_pubkey.as_ref());
         temp_token_account_pubkey_dst.copy_from_slice(temp_token_account_pubkey.as_ref());
-        initializer_token_to_receive_account_pubkey_dst.copy_from_slice(*initializer_token_to_receive_account_pubkey.as_ref());
+        initializer_token_to_receive_account_pubkey_dst.copy_from_slice(initializer_token_to_receive_account_pubkey.as_ref());
         *expected_amount_dst = expected_amount.to_le_bytes();
     }
 }
