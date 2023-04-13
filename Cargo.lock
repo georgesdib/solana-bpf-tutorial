@@ -1437,9 +1437,9 @@ dependencies = [
 
 [[package]]
 name = "h2"
-version = "0.3.4"
+version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7f3675cfef6a30c8031cf9e6493ebdc3bb3272a3fea3923c4210d1830e6a472"
+checksum = "66b91535aa35fea1523ad1b86cb6b53c28e0ae566ba4a460f4457e936cad7c6f"
 dependencies = [
  "bytes 1.1.0",
  "fnv",
@@ -1450,7 +1450,7 @@ dependencies = [
  "indexmap",
  "slab",
  "tokio",
- "tokio-util",
+ "tokio-util 0.7.2",
  "tracing",
 ]
 
@@ -1929,7 +1929,7 @@ dependencies = [
  "log 0.4.14",
  "tokio",
  "tokio-stream",
- "tokio-util",
+ "tokio-util 0.6.8",
  "unicase 2.6.0",
 ]
 
@@ -4285,7 +4285,7 @@ dependencies = [
  "solana-vote-program",
  "spl-token",
  "tokio",
- "tokio-util",
+ "tokio-util 0.6.8",
 ]
 
 [[package]]
@@ -4850,7 +4850,7 @@ dependencies = [
  "tarpc-plugins",
  "tokio",
  "tokio-serde",
- "tokio-util",
+ "tokio-util 0.6.8",
 ]
 
 [[package]]
@@ -5207,6 +5207,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-util"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f988a1a1adc2fb21f9c12aa96441da33a1728193ae0b95d2be22dbd17fcb4e5c"
+dependencies = [
+ "bytes 1.1.0",
+ "futures-core",
+ "futures-sink",
+ "pin-project-lite",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "toml"
 version = "0.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5239,7 +5253,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "tokio-stream",
- "tokio-util",
+ "tokio-util 0.6.8",
  "tower",
  "tower-layer",
  "tower-service",
@@ -5273,7 +5287,7 @@ dependencies = [
  "slab",
  "tokio",
  "tokio-stream",
- "tokio-util",
+ "tokio-util 0.6.8",
  "tower-layer",
  "tower-service",
  "tracing",
